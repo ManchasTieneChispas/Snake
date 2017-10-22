@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>Main.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,128,0); font-weight: bold; }
+.s3 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+Main.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">sample; 
+ 
+</span><span class="s0">import </span><span class="s1">com.sun.corba.se.impl.orbutil.graph.Graph; 
+</span><span class="s0">import </span><span class="s1">javafx.animation.KeyFrame; 
+</span><span class="s0">import </span><span class="s1">javafx.animation.Timeline; 
+</span><span class="s0">import </span><span class="s1">javafx.application.Application; 
+</span><span class="s0">import </span><span class="s1">javafx.event.ActionEvent; 
+</span><span class="s0">import </span><span class="s1">javafx.event.EventHandler; 
+</span><span class="s0">import </span><span class="s1">javafx.fxml.FXMLLoader; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.Group; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.Parent; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.Scene; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.canvas.Canvas; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.canvas.GraphicsContext; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.control.Button; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.control.Label; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.layout.BorderPane; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.layout.StackPane; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.paint.Color; 
+</span><span class="s0">import </span><span class="s1">javafx.stage.Stage; 
+</span><span class="s0">import </span><span class="s1">javafx.util.Duration; 
+ 
+</span><span class="s0">import </span><span class="s1">java.io.IOException; 
+ 
+</span><span class="s0">public class </span><span class="s1">Main </span><span class="s0">extends </span><span class="s1">Application { 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">start(Stage primaryStage) </span><span class="s0">throws </span><span class="s1">IOException { 
+        FXMLLoader loader = </span><span class="s0">new </span><span class="s1">FXMLLoader(getClass().getResource(</span><span class="s2">&quot;sample.fxml&quot;</span><span class="s1">)); 
+        Parent root = (Parent) loader.load(); 
+        Scene scene = </span><span class="s0">new </span><span class="s1">Scene(root); 
+    </span><span class="s3">/* 
+        scene.setOnKeyPressed(event -&gt; { 
+            int keyCode = (int) event.getCode().toString().toCharArray()[0]; //key code 
+            KeyboardManager.keys[keyCode] = true; 
+        }); 
+        scene.setOnKeyReleased(event -&gt; { 
+            int keyCode = (int) event.getCode().toString().toCharArray()[0]; //key code 
+            KeyboardManager.keys[keyCode] = false; 
+        }); 
+*/</span><span class="s1"> 
+        primaryStage.setScene(scene); 
+        primaryStage.setTitle(</span><span class="s2">&quot;Snake&quot;</span><span class="s1">); 
+        primaryStage.show(); 
+ 
+    } 
+ 
+ 
+ 
+    </span><span class="s0">public static void </span><span class="s1">main(String[] args) { 
+        launch(args); 
+    } 
+} 
+</span></pre>
+</body>
+</html>

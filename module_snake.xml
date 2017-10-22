@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_snake" default="compile.module.snake">
+  <dirname property="module.snake.basedir" file="${ant.file.module_snake}"/>
+  
+  <property name="module.jdk.home.snake" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.snake" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.snake" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.snake" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="snake.output.dir" value="${module.snake.basedir}/out/production/Snake"/>
+  <property name="snake.testoutput.dir" value="${module.snake.basedir}/out/test/Snake"/>
+  
+  <path id="snake.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="snake.module.production.classpath">
+    <path refid="${module.jdk.classpath.snake}"/>
+  </path>
+  
+  <path id="snake.runtime.production.module.classpath">
+    <pathelement location="${snake.output.dir}"/>
+  </path>
+  
+  <path id="snake.module.classpath">
+    <path refid="${module.jdk.classpath.snake}"/>
+    <pathelement location="${snake.output.dir}"/>
+  </path>
+  
+  <path id="snake.runtime.module.classpath">
+    <pathelement location="${snake.testoutput.dir}"/>
+    <pathelement location="${snake.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.snake">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.snake">
+    <patternset refid="excluded.from.module.snake"/>
+  </patternset>
+  
+  <path id="snake.module.sourcepath">
+    <dirset dir="${module.snake.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.snake" depends="compile.module.snake.production,compile.module.snake.tests" description="Compile module Snake"/>
+  
+  <target name="compile.module.snake.production" depends="register.custom.compilers" description="Compile module Snake; production classes">
+    <mkdir dir="${snake.output.dir}"/>
+    <javac2 destdir="${snake.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.snake}/javac">
+      <compilerarg line="${compiler.args.snake}"/>
+      <bootclasspath refid="snake.module.bootclasspath"/>
+      <classpath refid="snake.module.production.classpath"/>
+      <src refid="snake.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.snake"/>
+    </javac2>
+    
+    <copy todir="${snake.output.dir}">
+      <fileset dir="${module.snake.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.snake.tests" depends="register.custom.compilers,compile.module.snake.production" description="compile module Snake; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.snake" description="cleanup module">
+    <delete dir="${snake.output.dir}"/>
+    <delete dir="${snake.testoutput.dir}"/>
+  </target>
+</project>

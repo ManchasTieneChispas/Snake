@@ -37,6 +37,7 @@ public class Controller {
     private Pos apple;
     private int mapsize;
     private Label gg;
+    private String score;
 
     public void fail() {
         time.stop();
@@ -46,11 +47,16 @@ public class Controller {
         gg = new Label("You have failed :(");
         gg.setTextFill(Color.GREEN);
         pane.setCenter(gg);
+        //canvas.setFocusTraversable(false);
+        pane.requestFocus();
+        System.out.println(pane.isFocused());
     }
 
     @FXML
     public void typed(KeyEvent event) {
-        if(event.getCode().toString().equals("R") && pane.getCenter().equals(gg)) reset();
+        System.out.println(event.getCode().toString());
+        if(pane.getCenter().equals(gg))
+        reset();
     }
 
     public void reset() {
@@ -78,6 +84,7 @@ public class Controller {
         }
         updateSnake();
         updateMap();
+        score = ("Score: " + (posMap.size()-4));
     }
     //optimal would be to render the position, and not check each cell to see if its one, to eliminate the map array entirely. someone add this
     private void render() {
@@ -99,6 +106,8 @@ public class Controller {
                 }
             }
         }
+        g.setFill(Color.BLUE);
+        g.fillText(score, 30, 20);
         if(counter != posMap.size()-1) fail();
     }
 
@@ -145,6 +154,9 @@ public class Controller {
     public void initialize() {
         //System.out.println("Init ran");
         pane.setCenter(canvas);
+        canvas.requestFocus();
+        System.out.println(canvas.isFocused());
+        System.out.println(pane.isFocused());
         mapsize = (int) (canvas.getHeight()/10);
         g = canvas.getGraphicsContext2D();
         map = new int[mapsize][mapsize];
@@ -161,6 +173,7 @@ public class Controller {
         int[] c= new int[]{(int)(Math.random() * mapsize), (int)(Math.random() * mapsize)};
         apple = new Pos(c);
         map[c[0]][c[1]] = 2;
+        score ="";
         time.play();
 
     }

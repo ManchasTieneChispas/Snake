@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>Pos.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+Pos.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">sample; 
+ 
+</span><span class="s0">public class </span><span class="s1">Pos { 
+    </span><span class="s0">private int </span><span class="s1">x; 
+    </span><span class="s0">private int </span><span class="s1">y; 
+    </span><span class="s0">private int</span><span class="s1">[] coord; 
+    </span><span class="s0">public </span><span class="s1">Pos(</span><span class="s0">int </span><span class="s1">x, </span><span class="s0">int </span><span class="s1">y) { 
+        </span><span class="s0">this</span><span class="s1">.x = x; 
+        </span><span class="s0">this</span><span class="s1">.y = y; 
+        </span><span class="s0">this</span><span class="s1">.coord = </span><span class="s0">new int</span><span class="s1">[]{x, y}; 
+    } 
+ 
+    </span><span class="s0">public </span><span class="s1">Pos(</span><span class="s0">int</span><span class="s1">[] p) { 
+        coord = </span><span class="s0">new int</span><span class="s1">[</span><span class="s2">2</span><span class="s1">]; 
+        coord[</span><span class="s2">0</span><span class="s1">] = p[</span><span class="s2">0</span><span class="s1">]; 
+        coord[</span><span class="s2">1</span><span class="s1">] = p[</span><span class="s2">1</span><span class="s1">]; 
+        x = p[</span><span class="s2">0</span><span class="s1">]; 
+        y = p[</span><span class="s2">1</span><span class="s1">]; 
+    } 
+ 
+    </span><span class="s0">public int</span><span class="s1">[] getPos() { 
+        </span><span class="s0">return </span><span class="s1">coord; 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">setPos(</span><span class="s0">int</span><span class="s1">[] p) { 
+        coord[</span><span class="s2">0</span><span class="s1">] = p[</span><span class="s2">0</span><span class="s1">]; 
+        coord[</span><span class="s2">1</span><span class="s1">] = p[</span><span class="s2">1</span><span class="s1">]; 
+        </span><span class="s0">this</span><span class="s1">.x = p[</span><span class="s2">0</span><span class="s1">]; 
+        </span><span class="s0">this</span><span class="s1">.y = p[</span><span class="s2">1</span><span class="s1">]; 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">setPos(</span><span class="s0">int </span><span class="s1">x, </span><span class="s0">int </span><span class="s1">y) { 
+        coord[</span><span class="s2">0</span><span class="s1">] = x; 
+        coord[</span><span class="s2">1</span><span class="s1">] = y; 
+        </span><span class="s0">this</span><span class="s1">.x = x; 
+        </span><span class="s0">this</span><span class="s1">.y = y; 
+    } 
+ 
+    </span><span class="s0">public int </span><span class="s1">getX() { 
+        </span><span class="s0">return </span><span class="s1">x; 
+    } 
+ 
+    </span><span class="s0">public int </span><span class="s1">getY() { 
+        </span><span class="s0">return </span><span class="s1">y; 
+    } 
+ 
+    </span><span class="s0">public boolean </span><span class="s1">equals(Pos obj) { 
+        </span><span class="s0">if</span><span class="s1">(</span><span class="s0">this</span><span class="s1">.x == obj.getX() &amp;&amp; </span><span class="s0">this</span><span class="s1">.y == obj.getY()) </span><span class="s0">return true</span><span class="s1">; 
+        </span><span class="s0">else return false</span><span class="s1">; 
+    } 
+} 
+</span></pre>
+</body>
+</html>
