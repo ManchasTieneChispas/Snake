@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>Controller.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,0,255); }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+Controller.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">sample; 
+ 
+</span><span class="s0">import </span><span class="s1">javafx.animation.KeyFrame; 
+</span><span class="s0">import </span><span class="s1">javafx.animation.Timeline; 
+</span><span class="s0">import </span><span class="s1">javafx.fxml.FXML; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.Node; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.Scene; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.canvas.Canvas; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.canvas.GraphicsContext; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.control.Label; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.input.KeyEvent; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.layout.Background; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.layout.BorderPane; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.paint.Color; 
+</span><span class="s0">import </span><span class="s1">javafx.scene.text.Font; 
+</span><span class="s0">import </span><span class="s1">javafx.stage.Stage; 
+</span><span class="s0">import </span><span class="s1">javafx.util.Duration; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+ 
+</span><span class="s0">import static </span><span class="s1">sample.KeyboardManager.keys; 
+</span><span class="s0">import static </span><span class="s1">sample.KeyboardManager.keysPressed; 
+</span><span class="s0">import static </span><span class="s1">sample.KeyboardManager.keysPressed; 
+ 
+ 
+</span><span class="s0">public class </span><span class="s1">Controller { 
+ 
+    @FXML 
+    Canvas canvas; 
+    @FXML 
+    BorderPane pane; 
+ 
+    </span><span class="s0">private char </span><span class="s1">lastDir; 
+    </span><span class="s0">private int</span><span class="s1">[][] map; 
+    </span><span class="s0">private </span><span class="s1">ArrayList&lt;Pos&gt; posMap; 
+    </span><span class="s0">private </span><span class="s1">GraphicsContext g; 
+    </span><span class="s0">private </span><span class="s1">Pos apple; 
+    </span><span class="s0">private int </span><span class="s1">mapsize; 
+    </span><span class="s0">private </span><span class="s1">Label gg; 
+    </span><span class="s0">private </span><span class="s1">String score; 
+ 
+    </span><span class="s0">public void </span><span class="s1">fail() { 
+        time.stop(); 
+        g.clearRect(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, canvas.getWidth(), canvas.getHeight()); 
+        g.setFill(Color.BLACK); 
+        g.fillRect(</span><span class="s2">0</span><span class="s1">,</span><span class="s2">0</span><span class="s1">,canvas.getWidth(), canvas.getHeight()); 
+        gg = </span><span class="s0">new </span><span class="s1">Label(</span><span class="s3">&quot;You have failed :(&quot;</span><span class="s1">); 
+        gg.setTextFill(Color.GREEN); 
+        pane.setCenter(gg); 
+        </span><span class="s4">//canvas.setFocusTraversable(false);</span><span class="s1"> 
+        pane.requestFocus(); 
+        System.out.println(pane.isFocused()); 
+    } 
+ 
+    @FXML 
+    </span><span class="s0">public void </span><span class="s1">typed(KeyEvent event) { 
+        System.out.println(event.getCode().toString()); 
+        </span><span class="s0">if</span><span class="s1">(pane.getCenter().equals(gg)) 
+        reset(); 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">reset() { 
+        initialize(); 
+    } 
+ 
+    </span><span class="s0">private </span><span class="s1">KeyFrame key = </span><span class="s0">new </span><span class="s1">KeyFrame(Duration.millis(</span><span class="s2">75</span><span class="s1">), event -&gt; { 
+        tick(); 
+        render(); 
+    }); 
+    </span><span class="s0">private </span><span class="s1">Timeline time; 
+ 
+    </span><span class="s0">public </span><span class="s1">Controller() { 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">tick() { 
+        </span><span class="s0">if</span><span class="s1">(keysPressed.contains(</span><span class="s3">&quot;A&quot;</span><span class="s1">) &amp;&amp; lastDir != </span><span class="s3">'D'</span><span class="s1">) { 
+            lastDir = </span><span class="s3">'A'</span><span class="s1">; 
+        } </span><span class="s0">else if </span><span class="s1">(keysPressed.contains(</span><span class="s3">&quot;D&quot;</span><span class="s1">) &amp;&amp; lastDir != </span><span class="s3">'A'</span><span class="s1">) { 
+            lastDir = </span><span class="s3">'D'</span><span class="s1">; 
+        } </span><span class="s0">else if </span><span class="s1">(keysPressed.contains(</span><span class="s3">&quot;S&quot;</span><span class="s1">) &amp;&amp; lastDir != </span><span class="s3">'W'</span><span class="s1">) { 
+            lastDir = </span><span class="s3">'S'</span><span class="s1">; 
+        } </span><span class="s0">else if </span><span class="s1">(keysPressed.contains(</span><span class="s3">&quot;W&quot;</span><span class="s1">) &amp;&amp; lastDir != </span><span class="s3">'S'</span><span class="s1">) { 
+            lastDir = </span><span class="s3">'W'</span><span class="s1">; 
+        } 
+        updateSnake(); 
+        updateMap(); 
+        score = (</span><span class="s3">&quot;Score: &quot; </span><span class="s1">+ (posMap.size()-</span><span class="s2">4</span><span class="s1">)); 
+    } 
+    </span><span class="s4">//optimal would be to render the position, and not check each cell to see if its one, to eliminate the map array entirely. someone add this</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">render() { 
+        </span><span class="s0">int </span><span class="s1">counter = </span><span class="s2">0</span><span class="s1">; 
+        g.clearRect(</span><span class="s2">0</span><span class="s1">,</span><span class="s2">0</span><span class="s1">, canvas.getWidth(), canvas.getHeight()); 
+        g.setFill(Color.BLACK); 
+        g.fillRect(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, canvas.getWidth(), canvas.getHeight()); 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; map.length; i++) { 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">k = </span><span class="s2">0</span><span class="s1">; k &lt; map[</span><span class="s2">0</span><span class="s1">].length; k++) { 
+                </span><span class="s0">if</span><span class="s1">(map[i][k] == </span><span class="s2">2</span><span class="s1">) { 
+                    g.setFill(Color.RED); 
+                    g.fillRect(i*</span><span class="s2">10</span><span class="s1">, k*</span><span class="s2">10</span><span class="s1">, </span><span class="s2">10</span><span class="s1">, </span><span class="s2">10</span><span class="s1">); 
+                } 
+ 
+                </span><span class="s0">if</span><span class="s1">(map[i][k] == </span><span class="s2">1</span><span class="s1">) { 
+                    g.setFill(Color.GREEN); 
+                    g.fillRect(i * </span><span class="s2">10</span><span class="s1">, k * </span><span class="s2">10</span><span class="s1">, </span><span class="s2">10</span><span class="s1">, </span><span class="s2">10</span><span class="s1">); 
+                    counter++; 
+                } 
+            } 
+        } 
+        g.setFill(Color.BLUE); 
+        g.fillText(score, </span><span class="s2">30</span><span class="s1">, </span><span class="s2">20</span><span class="s1">); 
+        </span><span class="s0">if</span><span class="s1">(counter != posMap.size()-</span><span class="s2">1</span><span class="s1">) fail(); 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">updateSnake() { 
+        Pos first = posMap.get(</span><span class="s2">0</span><span class="s1">); 
+        Pos last = </span><span class="s0">new </span><span class="s1">Pos(posMap.get(posMap.size()-</span><span class="s2">1</span><span class="s1">).getPos()); 
+        </span><span class="s0">if</span><span class="s1">(lastDir == </span><span class="s3">'A'</span><span class="s1">) first.setPos(first.getPos()[</span><span class="s2">0</span><span class="s1">] -</span><span class="s2">1</span><span class="s1">, first.getPos()[</span><span class="s2">1</span><span class="s1">] ); 
+        </span><span class="s0">if</span><span class="s1">(lastDir == </span><span class="s3">'D'</span><span class="s1">) first.setPos(first.getPos()[</span><span class="s2">0</span><span class="s1">] +</span><span class="s2">1</span><span class="s1">, first.getPos()[</span><span class="s2">1</span><span class="s1">] ); 
+        </span><span class="s0">if</span><span class="s1">(lastDir == </span><span class="s3">'S'</span><span class="s1">) first.setPos(first.getPos()[</span><span class="s2">0</span><span class="s1">], first.getPos()[</span><span class="s2">1</span><span class="s1">] +</span><span class="s2">1</span><span class="s1">); 
+        </span><span class="s0">if</span><span class="s1">(lastDir == </span><span class="s3">'W'</span><span class="s1">) first.setPos(first.getPos()[</span><span class="s2">0</span><span class="s1">] , first.getPos()[</span><span class="s2">1</span><span class="s1">] -</span><span class="s2">1</span><span class="s1">); 
+ 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = posMap.size()-</span><span class="s2">1</span><span class="s1">; i &gt; </span><span class="s2">0</span><span class="s1">; i--) { 
+            posMap.set(i, </span><span class="s0">new </span><span class="s1">Pos(posMap.get(i -</span><span class="s2">1</span><span class="s1">).getPos())); 
+        } 
+        </span><span class="s0">if</span><span class="s1">(apple.equals(first)) { 
+            posMap.add(last); 
+            apple = </span><span class="s0">new </span><span class="s1">Pos(</span><span class="s0">new int</span><span class="s1">[]{(</span><span class="s0">int</span><span class="s1">)(Math.random() * mapsize), (</span><span class="s0">int</span><span class="s1">)(Math.random() * mapsize)}); 
+        } 
+        </span><span class="s4">//System.out.println(posMap.size());</span><span class="s1"> 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">updateMap() { 
+        map = </span><span class="s0">new int</span><span class="s1">[mapsize][mapsize]; 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s2">0</span><span class="s1">; i &lt; posMap.size(); i++) { 
+            </span><span class="s0">if</span><span class="s1">(posMap.get(i).getX() &gt;= map.length) fail(); 
+            </span><span class="s0">if</span><span class="s1">(posMap.get(i).getY() &gt;= map[</span><span class="s2">0</span><span class="s1">].length) fail(); 
+            </span><span class="s0">if</span><span class="s1">(posMap.get(i).getX() &lt; </span><span class="s2">0</span><span class="s1">) fail(); 
+            </span><span class="s0">if</span><span class="s1">(posMap.get(i).getY() &lt; </span><span class="s2">0</span><span class="s1">) fail(); 
+            map[posMap.get(i).getX()][posMap.get(i).getY()] = </span><span class="s2">1</span><span class="s1">; 
+        } 
+        map[apple.getX()][apple.getY()] = </span><span class="s2">2</span><span class="s1">; 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">onKeyPressed(KeyEvent event) { 
+        </span><span class="s4">//System.out.println(event.getCode().toString());</span><span class="s1"> 
+        keysPressed.add(event.getCode().toString()); 
+ 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">onKeyReleased(KeyEvent event) { 
+        keysPressed.remove(event.getCode().toString()); 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">initialize() { 
+        </span><span class="s4">//System.out.println(&quot;Init ran&quot;);</span><span class="s1"> 
+        pane.setCenter(canvas); 
+        canvas.requestFocus(); 
+        System.out.println(canvas.isFocused()); 
+        System.out.println(pane.isFocused()); 
+        mapsize = (</span><span class="s0">int</span><span class="s1">) (canvas.getHeight()/</span><span class="s2">10</span><span class="s1">); 
+        g = canvas.getGraphicsContext2D(); 
+        map = </span><span class="s0">new int</span><span class="s1">[mapsize][mapsize]; 
+        time = </span><span class="s0">new </span><span class="s1">Timeline(key); 
+        time.setCycleCount(Timeline.INDEFINITE); 
+        g.setFill(Color.BLACK); 
+        g.fillRect(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, canvas.getWidth(), canvas.getHeight()); 
+        lastDir = </span><span class="s3">'W'</span><span class="s1">; 
+        posMap = </span><span class="s0">new </span><span class="s1">ArrayList&lt;Pos&gt;(); 
+        posMap.add(</span><span class="s0">new </span><span class="s1">Pos(</span><span class="s2">24</span><span class="s1">, </span><span class="s2">24</span><span class="s1">)); 
+        posMap.add(</span><span class="s0">new </span><span class="s1">Pos(</span><span class="s2">24</span><span class="s1">, </span><span class="s2">25</span><span class="s1">)); 
+        posMap.add(</span><span class="s0">new </span><span class="s1">Pos(</span><span class="s2">24</span><span class="s1">, </span><span class="s2">26</span><span class="s1">)); 
+        posMap.add(</span><span class="s0">new </span><span class="s1">Pos(</span><span class="s2">24</span><span class="s1">, </span><span class="s2">27</span><span class="s1">)); 
+        </span><span class="s0">int</span><span class="s1">[] c= </span><span class="s0">new int</span><span class="s1">[]{(</span><span class="s0">int</span><span class="s1">)(Math.random() * mapsize), (</span><span class="s0">int</span><span class="s1">)(Math.random() * mapsize)}; 
+        apple = </span><span class="s0">new </span><span class="s1">Pos(c); 
+        map[c[</span><span class="s2">0</span><span class="s1">]][c[</span><span class="s2">1</span><span class="s1">]] = </span><span class="s2">2</span><span class="s1">; 
+        score =</span><span class="s3">&quot;&quot;</span><span class="s1">; 
+        time.play(); 
+ 
+    } 
+ 
+} 
+</span></pre>
+</body>
+</html>
