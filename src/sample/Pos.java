@@ -44,4 +44,8 @@ public class Pos {
         return y;
     }
 
+    public boolean equals(Pos obj) {
+        if(this.x == obj.getX() && this.y == obj.getY()) return true;
+        else return false;
+    }
 }

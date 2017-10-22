@@ -3,11 +3,17 @@ package sample;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -21,22 +27,44 @@ public class Controller {
 
     @FXML
     Canvas canvas;
+    @FXML
+    BorderPane pane;
 
     private char lastDir;
     private int[][] map;
-    private int snakeLength;
     private ArrayList<Pos> posMap;
     private GraphicsContext g;
     private Pos apple;
     private int mapsize;
+    private Label gg;
 
+    public void fail() {
+        time.stop();
+        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setFill(Color.BLACK);
+        g.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+        gg = new Label("You have failed :(");
+        gg.setTextFill(Color.GREEN);
+        pane.setCenter(gg);
+    }
 
+    @FXML
+    public void typed(KeyEvent event) {
+        if(event.getCode().toString().equals("R") && pane.getCenter().equals(gg)) reset();
+    }
+
+    public void reset() {
+        initialize();
+    }
 
     private KeyFrame key = new KeyFrame(Duration.millis(75), event -> {
         tick();
         render();
     });
     private Timeline time;
+
+    public Controller() {
+    }
 
     private void tick() {
         if(keysPressed.contains("A") && lastDir != 'D') {
@@ -53,20 +81,25 @@ public class Controller {
     }
     //optimal would be to render the position, and not check each cell to see if its one, to eliminate the map array entirely. someone add this
     private void render() {
+        int counter = 0;
         g.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for(int i = 0; i < map.length; i++) {
             for(int k = 0; k < map[0].length; k++) {
-                if(map[i][k] == 1) {
-                    g.setFill(Color.GREEN);
-                    g.fillRect(i * 10, k * 10, 10, 10);
-                } if(map[i][k] == 2) {
+                if(map[i][k] == 2) {
                     g.setFill(Color.RED);
                     g.fillRect(i*10, k*10, 10, 10);
                 }
+
+                if(map[i][k] == 1) {
+                    g.setFill(Color.GREEN);
+                    g.fillRect(i * 10, k * 10, 10, 10);
+                    counter++;
+                }
             }
         }
+        if(counter != posMap.size()-1) fail();
     }
 
     public void updateSnake() {
@@ -80,22 +113,23 @@ public class Controller {
         for(int i = posMap.size()-1; i > 0; i--) {
             posMap.set(i, new Pos(posMap.get(i -1).getPos()));
         }
-        if(apple.getPos().equals(first.getPos())) {
+        if(apple.equals(first)) {
             posMap.add(last);
             apple = new Pos(new int[]{(int)(Math.random() * mapsize), (int)(Math.random() * mapsize)});
-            map[apple.getX()][apple.getY()] = 2;
         }
+        //System.out.println(posMap.size());
     }
 
     public void updateMap() {
         map = new int[mapsize][mapsize];
         for(int i = 0; i < posMap.size(); i++) {
-            if(posMap.get(i).getX() >= map.length) throw new RuntimeException("posMap.get(" + i + ").getX() greater than map depth");
-            if(posMap.get(i).getY() >= map[0].length) throw new RuntimeException("posMap.get(" + i + ").getY() greater than map length");
-            if(posMap.get(i).getX() < 0) throw new RuntimeException("posMap.get(" + i + ").getX() less than 0");
-            if(posMap.get(i).getY() < 0) throw new RuntimeException("posMap.get(" + i + ").getX() less than 0");
+            if(posMap.get(i).getX() >= map.length) fail();
+            if(posMap.get(i).getY() >= map[0].length) fail();
+            if(posMap.get(i).getX() < 0) fail();
+            if(posMap.get(i).getY() < 0) fail();
             map[posMap.get(i).getX()][posMap.get(i).getY()] = 1;
         }
+        map[apple.getX()][apple.getY()] = 2;
     }
 
     public void onKeyPressed(KeyEvent event) {
@@ -110,7 +144,8 @@ public class Controller {
 
     public void initialize() {
         //System.out.println("Init ran");
-        mapsize = 50;
+        pane.setCenter(canvas);
+        mapsize = (int) (canvas.getHeight()/10);
         g = canvas.getGraphicsContext2D();
         map = new int[mapsize][mapsize];
         time = new Timeline(key);
@@ -118,7 +153,6 @@ public class Controller {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         lastDir = 'W';
-        snakeLength = 1;
         posMap = new ArrayList<Pos>();
         posMap.add(new Pos(24, 24));
         posMap.add(new Pos(24, 25));
@@ -128,6 +162,7 @@ public class Controller {
         apple = new Pos(c);
         map[c[0]][c[1]] = 2;
         time.play();
+
     }
 
 }
