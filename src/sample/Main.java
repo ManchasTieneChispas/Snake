@@ -29,7 +29,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
         Parent root = (Parent) loader.load();
         Scene scene = new Scene(root);
-        /*
+    /*
         scene.setOnKeyPressed(event -> {
             int keyCode = (int) event.getCode().toString().toCharArray()[0]; //key code
             KeyboardManager.keys[keyCode] = true;
@@ -38,10 +38,13 @@ public class Main extends Application {
             int keyCode = (int) event.getCode().toString().toCharArray()[0]; //key code
             KeyboardManager.keys[keyCode] = false;
         });
-        */
+*/
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Snake");
         primaryStage.show();
+
     }
+
 
 
     public static void main(String[] args) {

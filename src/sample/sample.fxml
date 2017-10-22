@@ -5,5 +5,5 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.canvas.Canvas?>
 <BorderPane fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" >
-    <center><Canvas fx:id="canvas" width="500" height="500" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased"></Canvas></center>
+    <center><Canvas fx:id="canvas" width="500" height="500" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" focusTraversable="true"/></center>
 </BorderPane>

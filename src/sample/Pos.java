@@ -11,6 +11,7 @@ public class Pos {
     }
 
     public Pos(int[] p) {
+        coord = new int[2];
         coord[0] = p[0];
         coord[1] = p[1];
         x = p[0];
